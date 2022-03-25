@@ -2,6 +2,7 @@ package com.example.marketapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -45,12 +46,12 @@ public class SearchFragment extends Fragment {
     RequestQueue queue;
     Intent i;
 
-    ArrayList<Produto> produtos = new ArrayList<Produto>();
+    ArrayList <Produto> listaProdutos = new ArrayList <Produto> ();
     AdapterProdutosList adapter;
 
     EditText etSearch;
     FloatingActionButton fab;
-    ListView lv_produtos;
+    ListView lvProdutos;
 
     @Nullable
     @Override
@@ -60,9 +61,9 @@ public class SearchFragment extends Fragment {
         queue = Volley.newRequestQueue(getContext());
         i = new Intent(getActivity(), ProdutoActivity.class);
 
-        EditText etSearch = (EditText) view.findViewById(R.id.etSearch);
+        etSearch = (EditText) view.findViewById(R.id.etSearch);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        lv_produtos = (ListView) view.findViewById(R.id.lvProdutos);
+        lvProdutos = (ListView) view.findViewById(R.id.lvProdutos);
 
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -81,7 +82,7 @@ public class SearchFragment extends Fragment {
                             new Response.Listener<JSONArray>() {
                                 @Override
                                 public void onResponse(JSONArray response) {
-                                    produtos.clear();
+                                    listaProdutos.clear();
 
                                     for (int i = 0; i < response.length(); i++) {
                                         try {
@@ -93,14 +94,14 @@ public class SearchFragment extends Fragment {
 
                                             Produto empresa = new Produto(id, nome, preco, cod, foto);
 
-                                            produtos.add(empresa);
+                                            listaProdutos.add(empresa);
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
                                     }
 
-                                    adapter = new AdapterProdutosList(getContext(), produtos);
-                                    lv_produtos.setAdapter(adapter);
+                                    adapter = new AdapterProdutosList(getContext(), listaProdutos);
+                                    lvProdutos.setAdapter(adapter);
 
                                 }
                             },
@@ -128,13 +129,15 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        lv_produtos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvProdutos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Produto produto = (Produto) adapter.getItem(position);
-                i.putExtra("nome_empresa", produto.getNome());
+                i.putExtra("nome", produto.getNome());
                 i.putExtra("preco", produto.getPreco());
-                i.putExtra("foto_perfil", produto.getFoto());
+                i.putExtra("codigo", produto.getCodigo());
+                i.putExtra("foto", produto.getFoto());
+
                 startActivity(i);
 
             }
@@ -168,11 +171,11 @@ public class SearchFragment extends Fragment {
 
                                     Produto empresa = new Produto(id, nome, preco, cod, foto);
 
-                                    produtos.clear();
-                                    produtos.add(empresa);
+                                    listaProdutos.clear();
+                                    listaProdutos.add(empresa);
 
-                                    adapter = new AdapterProdutosList(getContext(), produtos);
-                                    lv_produtos.setAdapter(adapter);
+                                    adapter = new AdapterProdutosList(getContext(), listaProdutos);
+                                    lvProdutos.setAdapter(adapter);
 
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -217,14 +220,14 @@ public class SearchFragment extends Fragment {
 
                                 Produto empresa = new Produto(id, nome, preco, cod, foto);
 
-                                produtos.add(empresa);
+                                listaProdutos.add(empresa);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
 
-                        adapter = new AdapterProdutosList(getContext(), produtos);
-                        lv_produtos.setAdapter(adapter);
+                        adapter = new AdapterProdutosList(getContext(), listaProdutos);
+                        lvProdutos.setAdapter(adapter);
 
                     }
                 },
@@ -254,9 +257,4 @@ public class SearchFragment extends Fragment {
         integrator.initiateScan();
     }
 
-    public void editEvent() {
-
-        return ;
-
-    }
 }

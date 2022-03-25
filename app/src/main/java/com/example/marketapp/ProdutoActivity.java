@@ -1,5 +1,9 @@
 package com.example.marketapp;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
@@ -10,15 +14,20 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.marketapp.adapter.AdapterProdutosList;
 import com.example.marketapp.dbHelper.ConnectionSQLite;
 import com.example.marketapp.models.Produto;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class ProdutoActivity extends AppCompatActivity {
 
-    boolean fav = false;
     ConnectionSQLite connectionSQLite;
-    Produto p;
+
+    Produto produto;
+
+    boolean fav = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,20 +37,28 @@ public class ProdutoActivity extends AppCompatActivity {
         ImageView ivFotoProduto = (ImageView) findViewById(R.id.ivFotoProduto);
         TextView txtNomeProduto = (TextView) findViewById(R.id.tvNomeProduto);
         ImageButton ibFav = (ImageButton) findViewById(R.id.ibFav);
-        connectionSQLite = new ConnectionSQLite(getBaseContext());
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            String nome_empresa = extras.getString("nome_empresa");
-            double preco = extras.getDouble("preco");
-            String foto_perfil = extras.getString("foto_perfil");
+            String nome_empresa = extras.getString("nome");
+            Double preco = extras.getDouble("preco");
+            String codigo = extras.getString("codigo");
+            String foto_perfil = extras.getString("foto");
 
-            Produto p = new Produto();
-            p.setNome(nome_empresa);
-            p.setPreco(preco);
-            p.setFoto(foto_perfil);
+            connectionSQLite = ConnectionSQLite.getInstance(getApplication());
+
+            produto = new Produto();
+            produto.setNome(nome_empresa);
+            produto.setPreco(preco);
+            produto.setCodigo(codigo);
+            produto.setFoto(foto_perfil);
 
             txtNomeProduto.setText(nome_empresa);
+
+            if(connectionSQLite.isInTheFavoriteList(produto)) {
+                fav = true;
+                ibFav.setBackgroundResource(R.drawable.coracaocheio);
+            }
 
             Picasso
             .with(this)
@@ -51,28 +68,30 @@ public class ProdutoActivity extends AppCompatActivity {
         }
 
         ibFav.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("Range")
             @Override
             public void onClick(View v) {
                 if(fav == true) {
                     fav = false;
+                    connectionSQLite.delProduto(produto);
                     ibFav.setBackgroundResource(R.drawable.coracao);
                 } else {
                     fav = true;
                     ibFav.setBackgroundResource(R.drawable.coracaocheio);
 
+                    boolean result = connectionSQLite.addProduct(produto);
 
-
-                    //connectionSQLite.addProduct(p);
-
-                    /*if(dataChecked) {
-                        Toast.makeText(getBaseContext(), "sucesso", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getBaseContext(), "sucesso", Toast.LENGTH_SHORT).show();
-                    }*/
+                    if(result) {
+                        alert("Favoritado");
+                    }
                 }
             }
         });
 
+    }
+
+    private void alert(String msg) {
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
 }
