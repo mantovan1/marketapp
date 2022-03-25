@@ -1,6 +1,7 @@
 package com.example.marketapp;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -15,22 +17,25 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.marketapp.adapter.AdapterProdutosList;
 import com.example.marketapp.dbHelper.ConnectionSQLite;
 import com.example.marketapp.models.Produto;
+import com.example.marketapp.observerpattern.IObserver;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 
-public class FavFragment extends Fragment {
+public class FavFragment extends Fragment implements IObserver {
 
     ConnectionSQLite conexaoSQLite;
 
     AdapterProdutosList adapter;
+    ListView lvProdutos;
 
-    ListView lv_produtos;
+    Intent i;
 
     @SuppressLint("Range")
     @Nullable
@@ -38,11 +43,28 @@ public class FavFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fav, container, false);
 
-        lv_produtos = (ListView) view.findViewById(R.id.lvProdutos);
+        i = new Intent(getActivity(), ProdutoActivity.class);
 
-        conexaoSQLite = new ConnectionSQLite(view.getContext());
+        lvProdutos = (ListView) view.findViewById(R.id.lvProdutos);
+
+        conexaoSQLite = ConnectionSQLite.getInstance(getActivity().getApplication());
+
+        conexaoSQLite.addObserver((IObserver) this);
 
         selectSelecionados();
+
+        lvProdutos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Produto produto = (Produto) adapter.getItem(position);
+                i.putExtra("nome", produto.getNome());
+                i.putExtra("preco", produto.getPreco());
+                i.putExtra("codigo", produto.getCodigo());
+                i.putExtra("foto", produto.getFoto());
+
+                startActivity(i);
+            }
+        });
 
         return view;
 
@@ -54,32 +76,21 @@ public class FavFragment extends Fragment {
         SQLiteDatabase db = conexaoSQLite.getReadableDatabase();
         Cursor resultado = db.rawQuery("SELECT * from produtos_selecionados", null);
 
-        ArrayList<Produto> listaProdutos = new ArrayList<Produto>();
+        ArrayList<Produto> listaProdutos = conexaoSQLite.selectProdutos();
 
-        if (resultado.moveToFirst()) {
+        adapter = new AdapterProdutosList(getContext(), listaProdutos);
+        lvProdutos.setAdapter(adapter);
 
-            while(resultado.moveToNext()) {
-
-                Produto produtoTemporario = new Produto();
-                produtoTemporario.setNome(resultado.getString(resultado.getColumnIndex("nome")));
-                produtoTemporario.setPreco(resultado.getDouble(resultado.getColumnIndex("preco")));
-                produtoTemporario.setFoto(resultado.getString(resultado.getColumnIndex("foto")));
-
-                listaProdutos.add(produtoTemporario);
-
-            }
-
-            alert("Número de items: " + listaProdutos.size());
-
-            AdapterProdutosList adapter = new AdapterProdutosList(getContext(), listaProdutos);
-            lv_produtos.setAdapter(adapter);
-
-        }
     }
 
     private void alert(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void update() {
 
+        selectSelecionados();
+
+    }
 }

@@ -5,16 +5,16 @@ public class Produto {
     public int id;
     public String nome;
     public double preco;
-    public String cod;
+    public String codigo;
     public String foto;
 
     public Produto(){};
 
-    public Produto(int id, String nome, double preco, String cod, String foto) {
+    public Produto(int id, String nome, double preco, String codigo, String foto) {
         this.id = id;
         this.nome = nome;
         this.preco = preco;
-        this.cod = cod;
+        this.codigo = codigo;
         this.foto = foto;
     }
 
@@ -42,12 +42,12 @@ public class Produto {
         this.preco = preco;
     }
 
-    public String getCod() {
-        return cod;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setCod(String cod) {
-        this.cod = cod;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getFoto() {

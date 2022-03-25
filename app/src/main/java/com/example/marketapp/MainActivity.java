@@ -1,8 +1,10 @@
 package com.example.marketapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.marketapp.dbHelper.ConnectionSQLite;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     FloatingActionButton fab;
+    ConnectionSQLite connectionSQLite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         fab = binding.fab;
 
-        /*fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });*/
-    }
-
-    public void switchToProduto() {
-        Intent i = new Intent(this, ProdutoActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
+        connectionSQLite = ConnectionSQLite.getInstance(getApplication());
     }
 
 }
