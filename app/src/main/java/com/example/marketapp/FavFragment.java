@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ import com.example.marketapp.observerpattern.IObserver;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.integration.android.IntentIntegrator;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class FavFragment extends Fragment implements IObserver {
@@ -33,7 +36,9 @@ public class FavFragment extends Fragment implements IObserver {
     ConnectionSQLite conexaoSQLite;
 
     AdapterProdutosList adapter;
+
     ListView lvProdutos;
+    TextView tvTotal;
 
     Intent i;
 
@@ -46,10 +51,13 @@ public class FavFragment extends Fragment implements IObserver {
         i = new Intent(getActivity(), ProdutoActivity.class);
 
         lvProdutos = (ListView) view.findViewById(R.id.lvProdutos);
+        tvTotal = (TextView) view.findViewById(R.id.tvTotal);
 
         conexaoSQLite = ConnectionSQLite.getInstance(getActivity().getApplication());
 
         conexaoSQLite.addObserver((IObserver) this);
+
+        tvTotal.setText("Total: R$" + conexaoSQLite.getTotalPreco());
 
         selectSelecionados();
 
@@ -90,6 +98,7 @@ public class FavFragment extends Fragment implements IObserver {
     @Override
     public void update() {
 
+        tvTotal.setText("Total: R$" + conexaoSQLite.getTotalPreco());
         selectSelecionados();
 
     }

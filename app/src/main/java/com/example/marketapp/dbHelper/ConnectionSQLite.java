@@ -119,6 +119,25 @@ public class ConnectionSQLite extends SQLiteOpenHelper implements ISubject {
         return resultado.moveToFirst();
     }
 
+    @SuppressLint("Range")
+    public double getTotalPreco() {
+        db = getReadableDatabase();
+        Cursor resultado = db.rawQuery("SELECT * from produtos_selecionados", null);
+
+        double total = 0;
+
+        if (resultado.moveToFirst()) {
+
+            do {
+
+                total += resultado.getDouble(resultado.getColumnIndex("preco"));
+
+            } while (resultado.moveToNext());
+        }
+
+        return total;
+    }
+
     //Observer Pattern
 
     @Override

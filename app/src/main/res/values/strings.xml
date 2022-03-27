@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MarketApp</string>
+    <string name="app_name">Market</string>
     <string name="tab_text_1">Busca</string>
     <string name="tab_text_2">Favoritos</string>
 </resources>
