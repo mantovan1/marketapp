@@ -2,6 +2,7 @@ package com.example.marketapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.Image;
@@ -33,6 +34,8 @@ public class ProdutoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_produto);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         ImageView ivFotoProduto = (ImageView) findViewById(R.id.ivFotoProduto);
         TextView txtNomeProduto = (TextView) findViewById(R.id.tvNomeProduto);

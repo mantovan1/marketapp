@@ -2,6 +2,7 @@ package com.example.marketapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import com.example.marketapp.dbHelper.ConnectionSQLite;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = binding.viewPager;
