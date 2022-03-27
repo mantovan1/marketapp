@@ -1,10 +1,16 @@
 # MarketApp
 
+This application made in java with the android SDK and Android Studio IDE, consists in a simple market app that read products information through a node api (that is in the following repository https://github.com/mantovan1/api-marketapp). You can search for the products through the search bar or using the qr code scanner (pressing the gray button in the screen). You can also added a product to your list of favorites.
+
+##screens
+
 <img src="tela_pesquisa_1.jpg" width="300"/>
 <img src="tela_pesquisa_2.jpg" width="300"/>
 <img src="tela_produto.jpg" width="300"/>
 <img src="tela_scan.jpg" width="300"/>
 <img src="tela_favoritos.jpg" width="300"/>
+
+##here are the qr codes that are registered in the api/db.
 
 <p float="left">
   <img src="qrcode_redminote9.png" width="100"/>
