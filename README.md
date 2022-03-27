@@ -1,7 +1,10 @@
 # MarketApp
 
-<img src="Screenshot_2022-03-03-22-20-54-532_com.example.marketapp.jpg" width="300"/>
-<img src="Screenshot_2022-03-03-22-21-03-374_com.example.marketapp.jpg" width="300"/>
+<img src="tela_pesquisa_1.jpg" width="300"/>
+<img src="tela_pesquisa_2.jpg" width="300"/>
+<img src="tela_produto.jpg" width="300"/>
+<img src="tela_scan.jpg" width="300"/>
+<img src="tela_favoritos.jpg" width="300"/>
 
 <p float="left">
   <img src="qrcode_redminote9.png" width="100"/>
