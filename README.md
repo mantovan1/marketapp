@@ -9,6 +9,6 @@
 </p>
 
 <p float="left">
-  <img src="qrcode_earphones.png" width="100"/>
+  <img src="qrcode_earphone.png" width="100"/>
   <img src="qrcode_pilhasrecarregaveis.png" width="100"/>
 </p>
